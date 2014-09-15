@@ -1,0 +1,54 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>a11y-cat</title>
+    <script src="../platform/platform.js"></script>   
+    <link rel="import" href="a11y-gif.html">
+    <style>
+      body {
+        text-align: center;
+        font-family: Helvetica, sans-serif;
+      }
+    </style>
+  </head>
+  <body>
+
+  <h1>Accessible animated GIFs</h1>
+  <h2>Post JSConf proof-of-concept</h2>
+  <h3>Let's improve the <code>&lt;img&gt;</code> tag</h3>
+
+	<img is="a11y-gif"
+		id="gifpb" 
+		src="http://i.imgur.com/IskWgYe.gif" 
+		alt="A dancing banana shaking maracas | It's peanut butter jelly time! | Peanut butter Jelly time! | Peanut Butter and Jelly with a baseball bat | Peanut Butter and Jelly with a baseball bat"
+		/>
+
+	<template is="auto-binding">
+		<p><strong>{{$.gifpb.subtitle}}</strong></p>
+	</template>
+
+	<img is="a11y-gif" 
+		id="gif"
+		src="http://i.imgur.com/z5lkXDK.gif" 
+		alt="TO THE INTERNET! | A squirrel is chasing a puppy | The puppy is chasing a cat with fur blowing in the wind"
+		/>
+
+	<template is="auto-binding">
+		<p><strong>{{$.gif.subtitle}}</strong></p>
+	</template>
+
+	<img is="a11y-gif"
+		id="gifron" 
+		src="http://i.imgur.com/H75QVFx.gif" 
+		alt="Ron is moved | He is shaking his fist in relief | He may just cry"
+		/>
+
+	<template is="auto-binding">
+		<p><strong>{{$.gifron.subtitle}}</strong></p>
+	</template>
+
+  </body>
+</html>
+
+

@@ -1,0 +1,160 @@
+<!--
+Copyright (c) 2014 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<!--
+The `a11y-gif` element exposes accessible animated GIF functionality.
+It treats `alt` tags as a source of subtitle data for frames at a 
+specified interval. 
+
+Whilst you could define similar `alt` tags on standard `<img>` elements,
+`a11y-gif` gives you a way to visualize them.
+
+    <a11y-gif
+        src="cool-story.gif"
+        alt="Takes off sunglasses | That was a cool story | Please tell me more"
+        delay="1600"
+        deliminator="|"></a11y-gif>
+ 
+Default values are provided for the `delay` and `deliminator` attributes.
+If you wish to customize their values, you may do so.
+
+@element a11y-gif
+@status beta
+@homepage github.io
+-->
+<link rel="import" href="../polymer/polymer.html">
+<polymer-element name="a11y-gif" extends="img" attributes="delay deliminator loop">
+<script>
+
+  Polymer('a11y-gif', {
+    /**
+     * The delay between displaying the next subtitle
+     * in the sequence
+     * 
+     * @attribute delay
+     * @type integer
+     * @default 1500
+     */
+    delay: 1500,
+
+    /**
+     * The array of subtitles to be played back to the user
+     * 
+     * @property titles
+     * @type Array
+     * @default []
+     */
+    titles: [],
+
+    /**
+     * Loops the subtitles infinitely
+     * 
+     * @property loop
+     * @type boolean
+     * @default true
+     */
+    loop: true,
+
+    /**
+     * The deliminator to use when splitting the subtitles provided
+     * via the alt attribute
+     * 
+     * @attribute deliminator
+     * @type string
+     * @default '|'
+     */
+    deliminator: '|',
+
+    /**
+     * The current subtitle being played. This can be used within
+     * a template to display the subtitle anywhere in your page.
+     *
+     * For example, to use within an auto-binding template:
+     *
+     *     <img is="a11y-gif" id="gif" src=".." alt=".."/>
+     *
+     *     <template is="auto-binding">
+     *       {{$.gif.subtitle}}
+     *     </template>
+     * 
+     * @property subtitle
+     * @type string
+     * @default ''
+     */
+    subtitle: '',
+
+    /**
+     * The index of the current subtitle being played
+     * 
+     * @attribute currentIndex
+     * @type integer
+     * @default integer
+     */
+    currentIndex: 0,
+
+    created: function() {
+      // Split the alt tag based on a deliminator
+      this.titles = this.getAttribute('alt').split(this.deliminator);
+
+      if (this.titles === undefined) {
+        return;
+      }
+
+      // TODO: RequestAnimationFrame
+
+      var interval = setInterval(function(){
+        this.playSubtitles();
+      }.bind(this), this.delay);
+
+      // Avoid memory leaks
+      this.clearIntervals();
+    },
+
+    clearIntervals: function(){
+      if(this.subtitle === undefined && this.loop == false){
+        interval = null;
+      }
+    },
+
+    /**
+     * Plays subtitles if they are available
+     *
+     * @method playSubtitles
+     */
+    playSubtitles: function() {
+        this.subtitle = this.titles[this.currentIndex] || '';
+
+        if (this.subtitle === undefined) {
+          return;
+        }
+
+        this.nextSubtitle();
+
+        // If looping and all subtitles have already played
+        // let's reset back to the start of the subtitles
+        if (this.loop && this.currentIndex === this.titles.length) {
+            this.currentIndex = 0;
+        }
+
+        console.log(this.subtitle);
+    },
+
+    /**
+     * Progresses to the next subtitle in the list
+     *
+     * @method nextSubtitle
+     */
+    nextSubtitle: function() {
+      this.currentIndex++;
+    }
+
+  });
+
+</script>
+</polymer-element>
